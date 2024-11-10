@@ -1,24 +1,51 @@
 package com.example.e2u6;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
+import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
+
+    private TextView textViewSeleccion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        Datos[] datos = new Datos[]{
+                new Datos("España", "Madrid"),
+                new Datos("Francia", "París"),
+                new Datos("Italia", "Roma"),
+                new Datos("Alemania", "Berlín"),
+                new Datos("Reino Unido", "Londres"),
+                new Datos("Portugal", "Lisboa"),
+                new Datos("Rusia", "Moscú"),
+                new Datos("Japón", "Tokio"),
+                new Datos("China", "Pekín"),
+                new Datos("Brasil", "Brasilia")
+        };
+
+        textViewSeleccion = findViewById(R.id.textViewSeleccion);
+        ListView miLista = findViewById(R.id.miLista);
+
+        // Inflar la cabecera
+        View miCabecera = getLayoutInflater().inflate(R.layout.cabecera, null);
+        miLista.addHeaderView(miCabecera);
+
+        // Crear adaptador personalizado
+        Adaptador miAdaptador = new Adaptador(this, datos);
+        miLista.setAdapter(miAdaptador);
+
+        miLista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adaptador, View v, int position, long id) {
+                String capitalSeleccionada = ((Datos) adaptador.getItemAtPosition(position)).getCapital();
+                textViewSeleccion.setText("Pulsado: " + capitalSeleccionada);
+
+            }
         });
     }
 }
